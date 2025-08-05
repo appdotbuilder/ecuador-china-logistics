@@ -1,7 +1,18 @@
 
+import { db } from '../db';
+import { importRecordsTable } from '../db/schema';
+import { eq } from 'drizzle-orm';
+
 export const deleteImportRecord = async (id: number): Promise<boolean> => {
-    // This is a placeholder declaration! Real code should be implemented here.
-    // The goal of this handler is deleting an import record from the database by its ID.
-    // It should return true if the record was successfully deleted, false if not found.
-    return false;
+  try {
+    const result = await db.delete(importRecordsTable)
+      .where(eq(importRecordsTable.id, id))
+      .execute();
+
+    // Check if any rows were affected (deleted)
+    return (result.rowCount ?? 0) > 0;
+  } catch (error) {
+    console.error('Import record deletion failed:', error);
+    throw error;
+  }
 };
